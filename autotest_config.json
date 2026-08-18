@@ -1,0 +1,51 @@
+{
+  "description": "Regression probe: Conda resolver must NOT classify a non-Conda environment.yaml as a Conda manifest (TKA-10917). The file application/src/main/resources/environment.yaml is a Hippo CMS/JCR config with no conda schema keys (name/channels/dependencies). Expected: 0 Conda deps. Any Conda dep detected = regression.",
+  "version": 1.8,
+  "base_config": {
+    "branch": null,
+    "_comment_branch": "Scan default branch."
+  },
+  "validate_scan_output": false,
+  "scan_output": {},
+  "validate_dependency_tree": true,
+  "dependency_tree": {
+    "_comment_total_dependencies": "Maven pom.xml contributes 2 direct deps (commons-lang3, guava) plus transitives. Conda must contribute EXACTLY 0.",
+    "conda_dependency_count": {
+      "eq": 0
+    },
+    "_comment_conda_dependency_count": "STRICT zero: any non-zero value here means the Conda resolver incorrectly processed the non-Conda environment.yaml. This is the primary regression signal for TKA-10917.",
+    "package_managers": {
+      "contains": ["maven"],
+      "_comment_package_managers": "maven must be detected (pom.xml present). conda must NOT appear as a contributing PM."
+    },
+    "_comment_package_managers_conda_absent": "If 'conda' appears in the actual package_managers list alongside Maven, the resolver is misclassifying the Hippo CMS environment.yaml — TKA-10917 regression confirmed."
+  },
+  "validate_vulnerabilities_table": false,
+  "vulnerabilities_table": {},
+  "validate_scanner_logs": true,
+  "logs": {
+    "_comment_must_not_contain": "The scanner log must NOT contain the Conda manifest classification line for the non-Conda YAML path. If present, filename-only manifest detection is still active.",
+    "must_not_contain": [
+      {
+        "pattern": "the below path is [manifest] of [conda]: \"application/src/main/resources/environment.yaml\"",
+        "severity": "ERROR",
+        "_comment": "This log line is the exact signal from TKA-10917. Its presence means the Conda resolver still routes non-Conda YAMLs by filename alone."
+      },
+      {
+        "pattern": "EnvironmentSectionNotValid",
+        "severity": "ERROR",
+        "_comment": "Conda emits this when it receives a non-Conda YAML. If the scanner reaches this point it has already mis-classified the file."
+      },
+      {
+        "pattern": "CondaDependencyResolver tree size",
+        "severity": "ERROR",
+        "_comment": "The Conda resolver must not be invoked at all for this repo. Any tree-size log from CondaDependencyResolver is a regression."
+      }
+    ],
+    "detect_secrets": false
+  },
+  "validate_reachability": false,
+  "reachability": {},
+  "validate_project_contributors": false,
+  "contributors": {}
+}
