@@ -1,0 +1,9 @@
+{
+  "_comment": "Regression probe for TKA-10917. This repo contains a non-Conda environment.yaml (Hippo CMS/JCR format, no conda schema keys). The Mend Conda resolver must produce ZERO Conda dependencies. The Java pom.xml produces Maven dependencies — those are separate and not under test here.",
+  "conda": {
+    "dependency_count": 0,
+    "direct_count": 0,
+    "transitive_count": 0,
+    "dependencies": []
+  }
+}
