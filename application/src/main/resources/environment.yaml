@@ -1,0 +1,24 @@
+# This file is a Hippo CMS / JCR (Java Content Repository) configuration file.
+# It is NOT a Conda environment specification.
+# It contains no Conda schema keys: no 'name:', no 'channels:', no 'dependencies:'.
+# The Mend Conda resolver must skip this file rather than invoking conda env create.
+# Regression fixture for TKA-10917.
+
+/content/documents/wcm/environment:
+  jcr:primaryType: hippo:handle
+  jcr:mixinTypes:
+    - mix:referenceable
+  hippo:availability:
+    - live
+    - preview
+  hippo:paths:
+    - /content/documents/wcm/environment
+  environment:
+    jcr:primaryType: myproject:basedocument
+    hippostd:state: published
+    hippostd:stateSummary: live
+    hippostd:retainable: true
+    myproject:title: Production Environment
+    myproject:description: JCR content node describing the deployment environment.
+    myproject:region: us-east-1
+    myproject:tier: prod
